@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.target_repo }}
-          ref: refs/pull/${{ github.event.inputs.pr_number }}/head # Fetches the specific PR commit
+          ref: refs/pull/${{ github.event.inputs.pr_number }}/head 
 
       - name: Install dependencies
         run: |
