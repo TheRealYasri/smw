@@ -1,0 +1,39 @@
+name: Universal PR Builder
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: 'Repository to build (e.g., snesrev/smw)'
+        required: true
+        default: 'snesrev/smw'
+      pr_number:
+        description: 'Pull Request Number'
+        required: true
+        default: '44'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.target_repo }}
+          ref: refs/pull/${{ github.event.inputs.pr_number }}/head # Fetches the specific PR commit
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libsdl2-dev python3
+
+      - name: Build
+        run: make all
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.inputs.pr_number }}-linux-x64
+          path: |
+            smw
+            smw_assets.dat
